@@ -39,4 +39,9 @@ resource "aws_autoscaling_group" "main_asg" {
   health_check_type = "${var.health_check_type}"
 
   load_balancers = ["${split(",", var.load_balancer_names)}"]
+  tag {
+    key                 = "Name"
+    value               = "${var.asg_name} ec2"
+    propagate_at_launch = true
+  }
 }
