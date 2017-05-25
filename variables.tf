@@ -17,7 +17,7 @@ variable "key_name" {
   description = "The SSH public key name (in EC2 key-pairs) to be injected into instances"
 }
 variable "security_groups" {
-  type = list
+  type = "list"
   description = "ID of SG's the launched instance will use"
 }
 variable "user_data" {
