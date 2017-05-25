@@ -16,8 +16,9 @@ variable "iam_instance_profile" {
 variable "key_name" {
   description = "The SSH public key name (in EC2 key-pairs) to be injected into instances"
 }
-variable "security_group" {
-  description = "ID of SG the launched instance will use"
+variable "security_groups" {
+  type = list
+  description = "ID of SG's the launched instance will use"
 }
 variable "user_data" {
   description = "The path to a file with user_data for the instances"
@@ -78,4 +79,3 @@ variable "availability_zones" {
 variable "vpc_zone_subnets" {
   description = "A comma seperated list string of VPC subnets to associate with ASG, should correspond with var.availability_zones zones"
 }
-
