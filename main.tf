@@ -9,7 +9,8 @@
  */
 
 resource "aws_launch_configuration" "launch_config" {
-  name = "${var.lc_name}"
+  lifecycle { create_before_destroy = true }
+
   image_id = "${var.ami_id}"
   instance_type = "${var.instance_type}"
   iam_instance_profile = "${var.iam_instance_profile}"
@@ -19,17 +20,16 @@ resource "aws_launch_configuration" "launch_config" {
 }
 
 resource "aws_autoscaling_group" "main_asg" {
-  # We want this to explicitly depend on the launch config above
-  depends_on = ["aws_launch_configuration.launch_config"]
+  lifecycle { create_before_destroy = true }
 
-  name = "${var.asg_name}"
+  name = "${var.asg_name} - ${aws_launch_configuration.launch_config.name}"
 
   # The chosen availability zones *must* match the AZs the VPC subnets are tied to.
   availability_zones = ["${split(",", var.availability_zones)}"]
   vpc_zone_identifier = ["${split(",", var.vpc_zone_subnets)}"]
 
   # Uses the ID from the launch config created above
-  launch_configuration = "${aws_launch_configuration.launch_config.id}"
+  launch_configuration = "${aws_launch_configuration.launch_config.name}"
 
   max_size = "${var.asg_number_of_instances}"
   min_size = "${var.asg_minimum_number_of_instances}"
